@@ -1,48 +1,46 @@
-﻿namespace Me.Web.Presentation
+﻿namespace Archient.Web.Client
 {
-    using Me.Web.Domain.Controllers;
-    using Me.Web.Domain.Entities;
-    using Me.Web.Extensions;
+    using Archient.Web.Extensions;
     using Microsoft.AspNet.Builder;
     using Microsoft.AspNet.Diagnostics;
     using Microsoft.AspNet.Diagnostics.Entity;
     using Microsoft.AspNet.Hosting;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Routing;
-    using Microsoft.AspNet.Routing.Template;
     using Microsoft.Framework.ConfigurationModel;
     using Microsoft.Framework.DependencyInjection;
     using Microsoft.Framework.Logging;
     using Microsoft.Framework.Logging.Console;
     using System;
-    using System.Collections.ObjectModel;
-    using System.Diagnostics;
-    using System.Linq;
 
     public abstract class DefaultStarterWebStartup
     {
+        private static string DefaultConfigurationFileName = "config.json";
+
+        private static string DefaultDevEnvName = "Development";
+
+        private static string DefaultErrorHandlerVPath = "/Home/Error";
+
         protected DefaultStarterWebStartup(IHostingEnvironment env)
         {
             // Setup configuration sources.
-            this.Configuration = new Configuration()
-                .AddJsonFile("config.json")
-                .AddEnvironmentVariables();
+            this.Configuration = 
+                new Configuration()
+                    .AddJsonFile(this.ConfigurationFileName)
+                    .AddEnvironmentVariables();
         }
+
+        protected virtual string ConfigurationFileName {  get { return DefaultConfigurationFileName; } }
+
+        protected virtual string DevelopmentEnvironmentName { get { return DefaultDevEnvName; } }
+
+        protected virtual string ErrorHandlerPath {  get { return DefaultErrorHandlerVPath; } }
 
         public virtual IConfiguration Configuration { get; set; }
 
         // This method gets called by the runtime.
         public virtual void ConfigureServices(IServiceCollection services)
         {
-            // Add EF services to the services container.
-            services.AddEntityFramework(Configuration)
-                .AddSqlServer()
-                .AddDbContext<ApplicationDbContext>();
-
-            // Add Identity services to the services container.
-            services.AddIdentity<ApplicationUser, IdentityRole>(Configuration)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-
             // Add MVC services to the services container.
             services.AddMvc();
 
@@ -60,7 +58,7 @@
             loggerfactory.AddConsole();
 
             // Add the following to the request pipeline only in development environment.
-            if (string.Equals(env.EnvironmentName, "Development", StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(env.EnvironmentName, this.DevelopmentEnvironmentName, StringComparison.OrdinalIgnoreCase))
             {
                 app.UseBrowserLink();
                 app.UseErrorPage(ErrorPageOptions.ShowAll);
@@ -70,22 +68,41 @@
             {
                 // Add Error handling middleware which catches all application specific errors and
                 // send the request to the following path or controller action.
-                app.UseErrorHandler("/Home/Error");
+                app.UseErrorHandler(this.ErrorHandlerPath);
             }
 
             // Add static files to the request pipeline.
             app.UseStaticFiles();
+            
+            app = this.RegisterRoutes(app);
+        }
 
-            // Add cookie-based authentication to the request pipeline.
-            app.UseIdentity();
+        protected virtual IApplicationBuilder RegisterRoutes(
+            IApplicationBuilder app)
+        {
+            return this.RegisterRoutes(app, typeof(EmptyController), nameof(EmptyController.HttpNotFound));
+        }
 
+        protected virtual IApplicationBuilder RegisterRoutes(
+            IApplicationBuilder app,
+            Type defaultControllerType,
+            string defaultControllerActionName)
+        {
             // Add MVC to the request pipeline.
             app.UseMvc(routes =>
             {
                 const string DefaultRouteName = "default";
                 const string DefaultRouteTemplate = "{controller}/{action}/{id?}";
-                var defaultRouteDefaults = new { controller = ControllerNames.GetName<HomeController>(), action = nameof(HomeController.Index) };
-                var defaultRouteNamespaces = new[] { typeof(HomeController).Namespace };
+
+                var defaultRouteDefaults =
+                    new
+                    {
+                        controller = defaultControllerType.Name.Replace("Controller", string.Empty),
+                        action = defaultControllerActionName
+                    };
+
+                var defaultRouteNamespaces =
+                    new[] { defaultControllerType.Namespace };
 
                 routes = routes.MapRoute(
                     name: DefaultRouteName,
@@ -97,6 +114,8 @@
                 // Uncomment the following line to add a route for porting Web API 2 controllers.
                 // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
             });
+
+            return app;
         }
     }
 }

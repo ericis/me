@@ -1,16 +1,22 @@
-﻿namespace Me.Web.Infrastructure.Repositories.Identity
+﻿namespace Archient.Web.Identity.Infrastructure.Repositories
 {
+    using Archient.Web.Identity.Domain.Entities;
+    using Microsoft.AspNet.Identity;
     using Microsoft.Data.Entity;
     using Microsoft.Data.Entity.Metadata;
     using Microsoft.Data.Entity.Migrations;
     using Microsoft.Data.Entity.Migrations.Builders;
     using Microsoft.Data.Entity.Migrations.Infrastructure;
     using System;
+    using System.Diagnostics;
 
     public partial class CreateIdentitySchema : Migration
     {
         public override void Up(MigrationBuilder migrationBuilder)
         {
+            if (Debugger.IsAttached) Debugger.Break();
+            else Debugger.Launch();
+
             migrationBuilder.CreateTable("AspNetRoles",
                 c => new
                     {
@@ -102,6 +108,9 @@
         
         public override void Down(MigrationBuilder migrationBuilder)
         {
+            if (Debugger.IsAttached) Debugger.Break();
+            else Debugger.Launch();
+
             migrationBuilder.DropForeignKey("AspNetRoleClaims", "FK_AspNetRoleClaims_AspNetRoles_RoleId");
             
             migrationBuilder.DropForeignKey("AspNetUserClaims", "FK_AspNetUserClaims_AspNetUsers_UserId");
@@ -122,7 +131,7 @@
         }
     }
 
-    [ContextType(typeof(Domain.Entities.ApplicationDbContext))]
+    [ContextType(typeof(ApplicationDbContext))]
     public partial class CreateIdentitySchema : IMigrationMetadata
     {
         string IMigrationMetadata.MigrationId
@@ -145,17 +154,20 @@
         {
             get
             {
-                var builder = new BasicModelBuilder();
+                if (Debugger.IsAttached) Debugger.Break();
+                else Debugger.Launch();
 
-                builder.Entity("Microsoft.AspNet.Identity.IdentityRole", b =>
+                var builder = new BasicModelBuilder();
+                
+                builder.Entity(typeof(IdentityRole).FullName, b =>
                 {
                     b.Property<string>("Id");
                     b.Property<string>("Name");
                     b.Key("Id");
                     b.ForRelational().Table("AspNetRoles");
                 });
-
-                builder.Entity("Microsoft.AspNet.Identity.IdentityRoleClaim`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", b =>
+                
+                builder.Entity(typeof(IdentityRoleClaim<string>).FullName, b =>
                 {
                     b.Property<string>("ClaimType");
                     b.Property<string>("ClaimValue");
@@ -165,8 +177,8 @@
                     b.Key("Id");
                     b.ForRelational().Table("AspNetRoleClaims");
                 });
-
-                builder.Entity("Microsoft.AspNet.Identity.IdentityUserClaim`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", b =>
+                
+                builder.Entity(typeof(IdentityUserClaim<string>).FullName, b =>
                 {
                     b.Property<string>("ClaimType");
                     b.Property<string>("ClaimValue");
@@ -177,7 +189,7 @@
                     b.ForRelational().Table("AspNetUserClaims");
                 });
 
-                builder.Entity("Microsoft.AspNet.Identity.IdentityUserLogin`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", b =>
+                builder.Entity(typeof(IdentityUserLogin<string>).FullName, b =>
                 {
                     b.Property<string>("LoginProvider");
                     b.Property<string>("ProviderDisplayName");
@@ -187,7 +199,7 @@
                     b.ForRelational().Table("AspNetUserLogins");
                 });
 
-                builder.Entity("Microsoft.AspNet.Identity.IdentityUserRole`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", b =>
+                builder.Entity(typeof(IdentityUserRole<string>).FullName, b =>
                 {
                     b.Property<string>("RoleId");
                     b.Property<string>("UserId");
@@ -195,7 +207,7 @@
                     b.ForRelational().Table("AspNetUserRoles");
                 });
 
-                builder.Entity("Me.Web.Host.Models.ApplicationUser", b =>
+                builder.Entity(typeof(ApplicationUser).FullName, b =>
                 {
                     b.Property<int>("AccessFailedCount");
                     b.Property<string>("Email");
@@ -214,19 +226,19 @@
                     b.ForRelational().Table("AspNetUsers");
                 });
 
-                builder.Entity("Microsoft.AspNet.Identity.IdentityRoleClaim`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", b =>
+                builder.Entity(typeof(IdentityRoleClaim<string>).FullName, b =>
                 {
-                    b.ForeignKey("Microsoft.AspNet.Identity.IdentityRole", "RoleId");
+                    b.ForeignKey(typeof(IdentityRole).FullName, "RoleId");
                 });
 
-                builder.Entity("Microsoft.AspNet.Identity.IdentityUserClaim`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", b =>
+                builder.Entity(typeof(IdentityUserClaim<string>).FullName, b =>
                 {
-                    b.ForeignKey("Me.Web.Host.Models.ApplicationUser", "UserId");
+                    b.ForeignKey(typeof(ApplicationUser).FullName, "UserId");
                 });
 
-                builder.Entity("Microsoft.AspNet.Identity.IdentityUserLogin`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", b =>
+                builder.Entity(typeof(IdentityUserLogin<string>).FullName, b =>
                 {
-                    b.ForeignKey("Me.Web.Host.Models.ApplicationUser", "UserId");
+                    b.ForeignKey(typeof(ApplicationUser).FullName, "UserId");
                 });
 
                 return builder.Model;

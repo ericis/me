@@ -1,4 +1,4 @@
-﻿namespace Me.Web.Domain.Entities
+﻿namespace Archient.Web.Identity.Domain.Entities
 {
     using System.ComponentModel.DataAnnotations;
 

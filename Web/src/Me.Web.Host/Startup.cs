@@ -6,7 +6,7 @@
     using Microsoft.Framework.DependencyInjection;
     using Microsoft.Framework.Logging;
 
-    public class Startup : Me.Web.Presentation.DefaultStarterWebStartup
+    public class Startup : Me.Web.Client.DefaultStarterWebStartup
     {
         public Startup(IHostingEnvironment env)
             : base(env)
