@@ -7,9 +7,9 @@
     using System.Threading.Tasks;
 
     [Authorize]
-    public abstract class AccountControllerBase : Controller
+    public class AccountController : Controller
     {
-        protected AccountControllerBase(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;

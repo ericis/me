@@ -88,6 +88,18 @@
             Type defaultControllerType,
             string defaultControllerActionName)
         {
+            var defaultRouteNamespaces =
+                new[] { defaultControllerType.Namespace };
+
+            return this.RegisterRoutes(app, defaultControllerType, defaultControllerActionName, defaultRouteNamespaces);
+        }
+
+        protected virtual IApplicationBuilder RegisterRoutes(
+            IApplicationBuilder app,
+            Type defaultControllerType,
+            string defaultControllerActionName,
+            string[] controllerNamespaces)
+        {
             // Add MVC to the request pipeline.
             app.UseMvc(routes =>
             {
@@ -100,16 +112,13 @@
                         controller = defaultControllerType.Name.Replace("Controller", string.Empty),
                         action = defaultControllerActionName
                     };
-
-                var defaultRouteNamespaces =
-                    new[] { defaultControllerType.Namespace };
-
+                
                 routes = routes.MapRoute(
                     name: DefaultRouteName,
                     template: DefaultRouteTemplate,
                     defaults: defaultRouteDefaults,
                     constraints: null,
-                    namespaces: defaultRouteNamespaces);
+                    namespaces: controllerNamespaces);
 
                 // Uncomment the following line to add a route for porting Web API 2 controllers.
                 // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");

@@ -1,5 +1,6 @@
 ﻿namespace Me.Web.Client
 {
+    using Archient.Web.Identity.Domain.Controllers;
     using Archient.Web.Identity.Extensions;
     using Me.Web.Domain.Controllers;
     using Microsoft.AspNet.Builder;
@@ -34,6 +35,13 @@
         protected override IApplicationBuilder RegisterRoutes(
             IApplicationBuilder app)
         {
+            var controllerNamespaces =
+                new[]
+                {
+                    typeof(HomeController).Namespace,
+                    typeof(AccountController).Namespace
+                };
+
             return this.RegisterRoutes(app, typeof(HomeController), nameof(HomeController.Index));
         }
     }
