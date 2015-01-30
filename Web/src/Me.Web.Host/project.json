@@ -19,6 +19,7 @@
         "Microsoft.Framework.Logging": "1.0.0-beta2",
         "Microsoft.Framework.Logging.Console": "1.0.0-beta2",
         "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-beta1",
+        "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-beta2",
         "Me.Web": "1.0.0-*"
     },
     "commands": {
