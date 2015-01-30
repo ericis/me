@@ -27,9 +27,11 @@
             IHostingEnvironment env, 
             ILoggerFactory loggerfactory)
         {
-            base.Configure(app, env, loggerfactory);
-
+            this.ConfigureWeb(app, env, loggerfactory);
+            
             app = app.ConfigureIdentity();
+            
+            app = this.ConfigureMvc(app);
         }
 
         protected override IApplicationBuilder RegisterRoutes(

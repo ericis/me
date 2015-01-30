@@ -26,6 +26,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Archient.Web.Identity", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".ref", ".ref", "{7F0B2DE5-4AA5-4EB4-BF10-26BA27058A43}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "AspNetFiveWebApplication", "src\ref\AspNetFiveWebApplication\AspNetFiveWebApplication.kproj", "{B4C066D1-46C4-4DE7-B83B-D8003E547025}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,10 @@ Global
 		{8DFDD43F-488A-42D5-9C24-8FD837B97C43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DFDD43F-488A-42D5-9C24-8FD837B97C43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DFDD43F-488A-42D5-9C24-8FD837B97C43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4C066D1-46C4-4DE7-B83B-D8003E547025}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4C066D1-46C4-4DE7-B83B-D8003E547025}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4C066D1-46C4-4DE7-B83B-D8003E547025}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4C066D1-46C4-4DE7-B83B-D8003E547025}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,5 +65,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{CF0C47F9-E8FA-4A6A-AD4C-1B1AED66CA82} = {73873AA3-A69B-4973-B707-C3AA46F95F87}
 		{8DFDD43F-488A-42D5-9C24-8FD837B97C43} = {73873AA3-A69B-4973-B707-C3AA46F95F87}
+		{B4C066D1-46C4-4DE7-B83B-D8003E547025} = {7F0B2DE5-4AA5-4EB4-BF10-26BA27058A43}
 	EndGlobalSection
 EndGlobal

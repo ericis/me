@@ -6,6 +6,7 @@
     using System.Security.Principal;
     using System.Threading.Tasks;
 
+    // Extending Identity Accounts: http://typecastexception.com/post/2013/11/11/Extending-Identity-Accounts-and-Implementing-Role-Based-Authentication-in-ASPNET-MVC-5.aspx
     [Authorize]
     public class AccountController : Controller
     {

@@ -1,87 +1,81 @@
 ﻿namespace Archient.Web.Identity.Infrastructure.Repositories
 {
-    using Archient.Web.Identity.Domain.Entities;
-    using Microsoft.AspNet.Identity;
     using Microsoft.Data.Entity;
     using Microsoft.Data.Entity.Metadata;
     using Microsoft.Data.Entity.Migrations;
     using Microsoft.Data.Entity.Migrations.Builders;
     using Microsoft.Data.Entity.Migrations.Infrastructure;
     using System;
-    using System.Diagnostics;
 
     public partial class CreateIdentitySchema : Migration
     {
         public override void Up(MigrationBuilder migrationBuilder)
         {
-            if (Debugger.IsAttached) Debugger.Break();
-            else Debugger.Launch();
-
             migrationBuilder.CreateTable("AspNetRoles",
                 c => new
-                    {
-                        Id = c.String(),
-                        Name = c.String()
-                    })
+                {
+                    Id = c.String(),
+                    Name = c.String()
+                })
                 .PrimaryKey("PK_AspNetRoles", t => t.Id);
-            
+
             migrationBuilder.CreateTable("AspNetRoleClaims",
                 c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        ClaimType = c.String(),
-                        ClaimValue = c.String(),
-                        RoleId = c.String()
-                    })
+                {
+                    Id = c.Int(nullable: false, identity: true),
+                    ClaimType = c.String(),
+                    ClaimValue = c.String(),
+                    RoleId = c.String()
+                })
                 .PrimaryKey("PK_AspNetRoleClaims", t => t.Id);
-            
+
             migrationBuilder.CreateTable("AspNetUserClaims",
                 c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        ClaimType = c.String(),
-                        ClaimValue = c.String(),
-                        UserId = c.String()
-                    })
+                {
+                    Id = c.Int(nullable: false, identity: true),
+                    ClaimType = c.String(),
+                    ClaimValue = c.String(),
+                    UserId = c.String()
+                })
                 .PrimaryKey("PK_AspNetUserClaims", t => t.Id);
-            
+
             migrationBuilder.CreateTable("AspNetUserLogins",
                 c => new
-                    {
-                        LoginProvider = c.String(),
-                        ProviderKey = c.String(),
-                        ProviderDisplayName = c.String(),
-                        UserId = c.String()
-                    })
+                {
+                    LoginProvider = c.String(),
+                    ProviderKey = c.String(),
+                    ProviderDisplayName = c.String(),
+                    UserId = c.String()
+                })
                 .PrimaryKey("PK_AspNetUserLogins", t => new { t.LoginProvider, t.ProviderKey });
-            
+
             migrationBuilder.CreateTable("AspNetUserRoles",
                 c => new
-                    {
-                        UserId = c.String(),
-                        RoleId = c.String()
-                    })
+                {
+                    UserId = c.String(),
+                    RoleId = c.String()
+                })
                 .PrimaryKey("PK_AspNetUserRoles", t => new { t.UserId, t.RoleId });
-            
+
             migrationBuilder.CreateTable("AspNetUsers",
                 c => new
-                    {
-                        Id = c.String(),
-                        AccessFailedCount = c.Int(nullable: false),
-                        Email = c.String(),
-                        EmailConfirmed = c.Boolean(nullable: false),
-                        LockoutEnabled = c.Boolean(nullable: false),
-                        LockoutEnd = c.DateTimeOffset(),
-                        NormalizedUserName = c.String(),
-                        PasswordHash = c.String(),
-                        PhoneNumber = c.String(),
-                        PhoneNumberConfirmed = c.Boolean(nullable: false),
-                        SecurityStamp = c.String(),
-                        TwoFactorEnabled = c.Boolean(nullable: false),
-                        UserName = c.String()
-                    })
+                {
+                    Id = c.String(),
+                    AccessFailedCount = c.Int(nullable: false),
+                    Email = c.String(),
+                    EmailConfirmed = c.Boolean(nullable: false),
+                    LockoutEnabled = c.Boolean(nullable: false),
+                    LockoutEnd = c.DateTimeOffset(),
+                    NormalizedUserName = c.String(),
+                    PasswordHash = c.String(),
+                    PhoneNumber = c.String(),
+                    PhoneNumberConfirmed = c.Boolean(nullable: false),
+                    SecurityStamp = c.String(),
+                    TwoFactorEnabled = c.Boolean(nullable: false),
+                    UserName = c.String()
+                })
                 .PrimaryKey("PK_AspNetUsers", t => t.Id);
-            
+
             migrationBuilder.AddForeignKey(
                 "AspNetRoleClaims",
                 "FK_AspNetRoleClaims_AspNetRoles_RoleId",
@@ -89,14 +83,14 @@
                  "AspNetRoles",
                  new[] { "Id" },
                  cascadeDelete: false);
-            
+
             migrationBuilder.AddForeignKey(
                 "AspNetUserClaims",
                 "FK_AspNetUserClaims_AspNetUsers_UserId",
                  new[] { "UserId" }, "AspNetUsers",
                  new[] { "Id" },
                  cascadeDelete: false);
-            
+
             migrationBuilder.AddForeignKey(
                 "AspNetUserLogins",
                 "FK_AspNetUserLogins_AspNetUsers_UserId",
@@ -105,33 +99,30 @@
                  new[] { "Id" },
                  cascadeDelete: false);
         }
-        
+
         public override void Down(MigrationBuilder migrationBuilder)
         {
-            if (Debugger.IsAttached) Debugger.Break();
-            else Debugger.Launch();
-
             migrationBuilder.DropForeignKey("AspNetRoleClaims", "FK_AspNetRoleClaims_AspNetRoles_RoleId");
-            
+
             migrationBuilder.DropForeignKey("AspNetUserClaims", "FK_AspNetUserClaims_AspNetUsers_UserId");
-            
+
             migrationBuilder.DropForeignKey("AspNetUserLogins", "FK_AspNetUserLogins_AspNetUsers_UserId");
-            
+
             migrationBuilder.DropTable("AspNetRoles");
-            
+
             migrationBuilder.DropTable("AspNetRoleClaims");
-            
+
             migrationBuilder.DropTable("AspNetUserClaims");
-            
+
             migrationBuilder.DropTable("AspNetUserLogins");
-            
+
             migrationBuilder.DropTable("AspNetUserRoles");
-            
+
             migrationBuilder.DropTable("AspNetUsers");
         }
     }
 
-    [ContextType(typeof(ApplicationDbContext))]
+    [ContextType(typeof(Domain.Entities.ApplicationDbContext))]
     public partial class CreateIdentitySchema : IMigrationMetadata
     {
         string IMigrationMetadata.MigrationId
@@ -154,20 +145,17 @@
         {
             get
             {
-                if (Debugger.IsAttached) Debugger.Break();
-                else Debugger.Launch();
-
                 var builder = new BasicModelBuilder();
-                
-                builder.Entity(typeof(IdentityRole).FullName, b =>
+
+                builder.Entity("Microsoft.AspNet.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id");
                     b.Property<string>("Name");
                     b.Key("Id");
                     b.ForRelational().Table("AspNetRoles");
                 });
-                
-                builder.Entity(typeof(IdentityRoleClaim<string>).FullName, b =>
+
+                builder.Entity("Microsoft.AspNet.Identity.IdentityRoleClaim`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", b =>
                 {
                     b.Property<string>("ClaimType");
                     b.Property<string>("ClaimValue");
@@ -177,8 +165,8 @@
                     b.Key("Id");
                     b.ForRelational().Table("AspNetRoleClaims");
                 });
-                
-                builder.Entity(typeof(IdentityUserClaim<string>).FullName, b =>
+
+                builder.Entity("Microsoft.AspNet.Identity.IdentityUserClaim`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", b =>
                 {
                     b.Property<string>("ClaimType");
                     b.Property<string>("ClaimValue");
@@ -189,7 +177,7 @@
                     b.ForRelational().Table("AspNetUserClaims");
                 });
 
-                builder.Entity(typeof(IdentityUserLogin<string>).FullName, b =>
+                builder.Entity("Microsoft.AspNet.Identity.IdentityUserLogin`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", b =>
                 {
                     b.Property<string>("LoginProvider");
                     b.Property<string>("ProviderDisplayName");
@@ -199,7 +187,7 @@
                     b.ForRelational().Table("AspNetUserLogins");
                 });
 
-                builder.Entity(typeof(IdentityUserRole<string>).FullName, b =>
+                builder.Entity("Microsoft.AspNet.Identity.IdentityUserRole`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", b =>
                 {
                     b.Property<string>("RoleId");
                     b.Property<string>("UserId");
@@ -207,7 +195,7 @@
                     b.ForRelational().Table("AspNetUserRoles");
                 });
 
-                builder.Entity(typeof(ApplicationUser).FullName, b =>
+                builder.Entity("Archient.Web.Identity.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Property<int>("AccessFailedCount");
                     b.Property<string>("Email");
@@ -226,19 +214,19 @@
                     b.ForRelational().Table("AspNetUsers");
                 });
 
-                builder.Entity(typeof(IdentityRoleClaim<string>).FullName, b =>
+                builder.Entity("Microsoft.AspNet.Identity.IdentityRoleClaim`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", b =>
                 {
-                    b.ForeignKey(typeof(IdentityRole).FullName, "RoleId");
+                    b.ForeignKey("Microsoft.AspNet.Identity.IdentityRole", "RoleId");
                 });
 
-                builder.Entity(typeof(IdentityUserClaim<string>).FullName, b =>
+                builder.Entity("Microsoft.AspNet.Identity.IdentityUserClaim`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", b =>
                 {
-                    b.ForeignKey(typeof(ApplicationUser).FullName, "UserId");
+                    b.ForeignKey("Archient.Web.Identity.Domain.Entities.ApplicationUser", "UserId");
                 });
 
-                builder.Entity(typeof(IdentityUserLogin<string>).FullName, b =>
+                builder.Entity("Microsoft.AspNet.Identity.IdentityUserLogin`1[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]", b =>
                 {
-                    b.ForeignKey(typeof(ApplicationUser).FullName, "UserId");
+                    b.ForeignKey("Archient.Web.Identity.Domain.Entities.ApplicationUser", "UserId");
                 });
 
                 return builder.Model;

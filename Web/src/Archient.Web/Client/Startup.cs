@@ -53,6 +53,12 @@
         // Configure is called after ConfigureServices is called.
         public virtual void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory)
         {
+            this.ConfigureWeb(app, env, loggerfactory);
+            this.ConfigureMvc(app);
+        }
+
+        public virtual void ConfigureWeb(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory)
+        {
             // Configure the HTTP request pipeline.
             // Add the console logger.
             loggerfactory.AddConsole();
@@ -73,8 +79,11 @@
 
             // Add static files to the request pipeline.
             app.UseStaticFiles();
-            
-            app = this.RegisterRoutes(app);
+        }
+
+        public virtual IApplicationBuilder ConfigureMvc(IApplicationBuilder app)
+        {
+            return this.RegisterRoutes(app);
         }
 
         protected virtual IApplicationBuilder RegisterRoutes(
@@ -112,7 +121,8 @@
                         controller = defaultControllerType.Name.Replace("Controller", string.Empty),
                         action = defaultControllerActionName
                     };
-                
+
+                // Route Constraints: http://stephenwalther.com/archive/2008/08/07/asp-net-mvc-tip-30-create-custom-route-constraints
                 routes = routes.MapRoute(
                     name: DefaultRouteName,
                     template: DefaultRouteTemplate,
