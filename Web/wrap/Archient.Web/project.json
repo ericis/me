@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0-*",
+  "frameworks": {
+    "net45": {
+      "wrappedProject": "../../src/Archient.Web/Archient.Web.csproj",
+      "bin": {
+        "assembly": "../../src/Archient.Web/obj/{configuration}/Archient.Web.dll",
+        "pdb": "../../src/Archient.Web/obj/{configuration}/Archient.Web.pdb"
+      }
+    }
+  }
+}

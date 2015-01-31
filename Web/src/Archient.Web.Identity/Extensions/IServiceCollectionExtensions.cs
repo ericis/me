@@ -1,18 +1,10 @@
 ﻿namespace Archient.Web.Identity.Extensions
 {
     using Archient.Web.Identity.Domain.Entities;
+    using Microsoft.AspNet.Builder;
     using Microsoft.AspNet.Identity;
     using Microsoft.Framework.ConfigurationModel;
     using Microsoft.Framework.DependencyInjection;
-    using System.Diagnostics;
-    using System;
-    using Microsoft.AspNet.Builder;
-    using Microsoft.AspNet.Diagnostics;
-    using Microsoft.AspNet.Routing;
-    using Microsoft.Data.Entity;
-    using System.Threading.Tasks;
-    using System.Threading;
-    using System.Collections.Generic;
 
     public static class IServiceCollectionExtensions
     {
@@ -20,6 +12,10 @@
             this IServiceCollection services,
             IConfiguration configuration)
         {
+            // http://www.asp.net/mvc/overview/security/create-an-aspnet-mvc-5-app-with-facebook-and-google-oauth2-and-openid-sign-on
+            // http://www.asp.net/mvc/overview/security/preventing-open-redirection-attacks
+            // http://www.asp.net/mvc/overview/security/aspnet-mvc-5-app-with-sms-and-email-two-factor-authentication
+
             // Add EF services to the services container.
             services
                 .AddEntityFramework(configuration)
@@ -35,6 +31,8 @@
             // OAuth Providers
             // https://github.com/aspnet/Identity/blob/dev/samples/IdentitySample.Mvc/Startup.cs
             // http://www.asp.net/mvc/overview/older-versions/using-oauth-providers-with-mvc
+            // http://azure.microsoft.com/en-us/documentation/articles/web-sites-dotnet-deploy-aspnet-mvc-app-membership-oauth-sql-database/
+            // http://www.jerriepelser.com/blog/pretty-social-login-buttons-for-asp-net-mvc-5
 
             //services.ConfigureMicrosoftAccountAuthentication(
             //    options =>
