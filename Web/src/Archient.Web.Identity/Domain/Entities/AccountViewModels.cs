@@ -1,12 +1,26 @@
 ﻿namespace Archient.Web.Identity.Domain.Entities
 {
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Mvc;
     using System.ComponentModel.DataAnnotations;
 
     public class ExternalLoginConfirmationViewModel
     {
         [Required]
+        [Display(Name = "E-mail")]
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
+
+        [Required]
         [Display(Name = "User name")]
         public string UserName { get; set; }
+    }
+
+    public class ExternalLoginListViewModel
+    {
+        public SignInManager<ApplicationUser> SignInManager { get; set; }
+
+        public string ReturnUrl { get; set; }
     }
 
     public class ManageUserViewModel
@@ -30,6 +44,8 @@
 
     public class LoginViewModel
     {
+        public SignInManager<ApplicationUser> SignInManager { get; set; }
+
         [Required]
         [Display(Name = "User name")]
         public string UserName { get; set; }
@@ -48,6 +64,11 @@
         [Required]
         [Display(Name = "User name")]
         public string UserName { get; set; }
+
+        [Required]
+        [Display(Name = "E-mail")]
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]

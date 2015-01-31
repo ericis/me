@@ -1,15 +1,18 @@
-﻿@model Archient.Web.Identity.Domain.Entities.RegisterViewModel
-
+﻿@model Archient.Web.Identity.Domain.Entities.ExternalLoginConfirmationViewModel
 @{
     ViewBag.Title = "Register";
 }
-
 <h2>@ViewBag.Title.</h2>
-
-<form asp-controller="Account" asp-action="Register" asp-anti-forgery="true" method="post" role="form" class="form-horizontal">
-    <h4>Create a new account.</h4>
+<h3>Associate your @ViewBag.LoginProvider account.</h3>
+<form asp-controller="Account" asp-action="ExternalLoginConfirmation" asp-anti-forgery="true" asp-route-returnurl="@ViewBag.ReturnUrl" method="post" role="form" class="form-horizontal">
+    <h4>Association Form</h4>
     <hr />
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <p class="text-info">
+        You've successfully authenticated with <strong>@ViewBag.LoginProvider</strong>.
+        Please enter a user name and e-mail for this site below and click the Register button to finish
+        logging in.
+    </p>
     <div class="form-group">
         <label asp-for="UserName" class="col-md-2 control-label"></label>
         <div class="col-md-10">
@@ -22,20 +25,6 @@
         <div class="col-md-10">
             <input asp-for="Email" class="form-control" />
             <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="Password" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="Password" class="form-control" />
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-    </div>
-    <div class="form-group">
-        <label asp-for="ConfirmPassword" class="col-md-2 control-label"></label>
-        <div class="col-md-10">
-            <input asp-for="ConfirmPassword" class="form-control" />
-            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group">

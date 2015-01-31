@@ -17,26 +17,26 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                     @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })              
+                <a asp-controller="Home" asp-action="Index" class="navbar-brand">Application name</a>
             </div>
             <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li>@Html.ActionLink("About", "About", "Home")</li>
-                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    </ul>
-                    @await Html.PartialAsync("_LoginPartial")
-                </div>
+                <ul class="nav navbar-nav">
+                    <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li><a asp-controller="Home" asp-action="About">About</a></li>
+                    <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
+                </ul>
+                <asp-partial view-name="_LoginPartial" />
+            </div>
         </div>
     </div>
     <div class="container body-content">
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; <asp-today format="yyyy" /> - My ASP.NET Application</p>
         </footer>
     </div>
-    <script src="~/lib/jquery/js/jquery.js"></script> 
+    <script src="~/lib/jquery/js/jquery.js"></script>
     <script src="~/lib/bootstrap/js/bootstrap.js"></script>
     @RenderSection("scripts", required: false)
 </body>

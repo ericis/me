@@ -1,4 +1,4 @@
-﻿namespace Me.Web.Domain.Controllers
+﻿namespace Me.Web.Host.Controllers
 {
     using Microsoft.AspNet.Mvc;
 

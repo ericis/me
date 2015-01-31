@@ -7,11 +7,11 @@
 
 <div class="row">
     <div class="col-md-12">
-        @await Html.PartialAsync("_ChangePasswordPartial")
+        <asp-partial view-name="_ChangePasswordPartial" />
     </div>
 </div>
 
 @section Scripts {
-    <script src="@Url.Content("~/lib/jquery-validation/jquery.validate.js")"></script>
-    <script src="@Url.Content("~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js")"></script>
+    <script src="~/lib/jquery-validation/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 }

@@ -3,17 +3,21 @@
     using Archient.Web.Identity.Domain.Entities;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Mvc;
+    using System.Security.Claims;
     using System.Security.Principal;
     using System.Threading.Tasks;
 
+    // MVC OAuth: http://www.asp.net/mvc/overview/security/create-an-aspnet-mvc-5-app-with-facebook-and-google-oauth2-and-openid-sign-on
+    // MVC E-mail Confirmation & Password Reset: http://www.asp.net/mvc/overview/security/create-an-aspnet-mvc-5-web-app-with-email-confirmation-and-password-reset
+    // 2-Factor Auth: http://www.asp.net/mvc/overview/security/aspnet-mvc-5-app-with-sms-and-email-two-factor-authentication
     // Extending Identity Accounts: http://typecastexception.com/post/2013/11/11/Extending-Identity-Accounts-and-Implementing-Role-Based-Authentication-in-ASPNET-MVC-5.aspx
     [Authorize]
     public class AccountController : Controller
     {
         public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
-            UserManager = userManager;
-            SignInManager = signInManager;
+            this.UserManager = userManager;
+            this.SignInManager = signInManager;
         }
 
         public UserManager<ApplicationUser> UserManager { get; private set; }
@@ -26,7 +30,7 @@
         public IActionResult Login(string returnUrl = null)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return View(new LoginViewModel { SignInManager = this.SignInManager });
         }
 
         //
@@ -36,6 +40,10 @@
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
+            if (model == null) model = new LoginViewModel();
+
+            model.SignInManager = this.SignInManager;
+
             if (ModelState.IsValid)
             {
                 var signInStatus = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, shouldLockout: false);
@@ -51,6 +59,96 @@
             }
 
             // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+        
+        // POST: /Account/ExternalLogin
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult ExternalLogin(string provider, string returnUrl)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
+
+            // Request a redirect to the external login provider
+            var auth = this.SignInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            
+            return new ChallengeResult(provider, auth);
+        }
+
+        //
+        // GET: /Account/ExternalLoginCallback
+        [AllowAnonymous]
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl)
+        {
+            var loginInfo = await this.SignInManager.GetExternalLoginInfoAsync();
+            if (loginInfo == null)
+            {
+                return RedirectToAction("Login");
+            }
+            
+            // Sign in the user with this external login provider if the user already has a login
+            var result = await this.SignInManager.ExternalLoginSignInAsync(loginInfo.LoginProvider, loginInfo.ProviderKey, isPersistent: false);
+            
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    return RedirectToLocal(returnUrl);
+                //case SignInStatus.LockedOut:
+                //    return View("Lockout");
+                //case SignInStatus.RequiresVerification:
+                //    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = false });
+                case SignInStatus.Failure:
+                default:
+
+                    // If the user does not have an account, then prompt the user to create an account
+                    ViewBag.ReturnUrl = returnUrl;
+                    ViewBag.LoginProvider = loginInfo.LoginProvider;
+
+                    var email = loginInfo.ExternalIdentity.FindFirstValue(ClaimTypes.Email);
+                    var userName = loginInfo.ExternalIdentity.GetUserName();
+
+                    return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email, UserName = userName });
+            }
+        }
+
+        // POST: /Account/ExternalLoginConfirmation
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Manage");
+            }
+
+            if (ModelState.IsValid)
+            {
+                // Get the information about the user from the external login provider
+                var info = await SignInManager.GetExternalLoginInfoAsync();
+                if (info == null)
+                {
+                    return View("ExternalLoginFailure");
+                }
+
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
+
+                var result = await UserManager.CreateAsync(user);
+
+                if (result.Succeeded)
+                {
+                    result = await UserManager.AddLoginAsync(user, info);
+                    if (result.Succeeded)
+                    {
+                        await SignInManager.SignInAsync(user, isPersistent: false);
+                        return RedirectToLocal(returnUrl);
+                    }
+                }
+                AddErrors(result);
+            }
+
+            ViewBag.ReturnUrl = returnUrl;
             return View(model);
         }
 
@@ -72,7 +170,7 @@
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserName };
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -150,6 +248,26 @@
         private async Task<ApplicationUser> GetCurrentUserAsync()
         {
             return await UserManager.FindByIdAsync(Context.User.Identity.GetUserId());
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (this.UserManager != null)
+                {
+                    this.UserManager.Dispose();
+                    this.UserManager = null;
+                }
+
+                if (this.SignInManager != null)
+                {
+                    //this.SignInManager.Dispose();
+                    this.SignInManager = null;
+                }
+            }
+
+            base.Dispose(disposing);
         }
 
         public enum ManageMessageId

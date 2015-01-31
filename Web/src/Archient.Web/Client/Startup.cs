@@ -17,6 +17,8 @@
     {
         private static string DefaultConfigurationFileName = "config.json";
 
+        private static string DefaultPrivateConfigurationFileName = "private.json";
+
         private static string DefaultDevEnvName = "Development";
 
         private static string DefaultErrorHandlerVPath = "/Home/Error";
@@ -24,13 +26,19 @@
         protected DefaultStarterWebStartup(IHostingEnvironment env)
         {
             // Setup configuration sources.
-            this.Configuration = 
-                new Configuration()
-                    .AddJsonFile(this.ConfigurationFileName)
-                    .AddEnvironmentVariables();
+            var configuration = new Configuration().AddJsonFile(this.ConfigurationFileName);
+
+            configuration.AddEnvironmentVariables();
+            
+            if (!string.IsNullOrWhiteSpace(this.PrivateConfigurationFileName))
+                configuration.AddJsonFile(this.PrivateConfigurationFileName);
+
+            this.Configuration = configuration;
         }
 
         protected virtual string ConfigurationFileName {  get { return DefaultConfigurationFileName; } }
+
+        protected virtual string PrivateConfigurationFileName { get { return DefaultPrivateConfigurationFileName; } }
 
         protected virtual string DevelopmentEnvironmentName { get { return DefaultDevEnvName; } }
 
